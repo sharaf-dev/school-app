@@ -20,7 +20,7 @@ class CreateStudentHomeworkTable extends Migration
             $table->text('link');
             $table->timestamp('submitted_at')->nullable();
             $table->foreignId('homework_id')->references('id')->on('homeworks');
-            $table->foreignId('student_id')->references('id')->on('student_db.students');
+            $table->foreignId('student_id');
             $table->tinyInteger('status')->default(StudentHomework::STATUS_NEW);
             $table->timestamps();
         });
