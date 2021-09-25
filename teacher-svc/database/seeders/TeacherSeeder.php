@@ -3,18 +3,17 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\Teacher;
 
-class DatabaseSeeder extends Seeder
+class TeacherSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      *
      * @return void
      */
     public function run()
     {
-        $this->call([
-            TeacherSeeder::class,
-        ]);
+        Teacher::factory(1)->create();
     }
 }

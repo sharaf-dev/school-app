@@ -4,6 +4,11 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
+use App\Services\ITeacherService;
+use App\Services\TeacherService;
+use App\Repositories\ITeacherRepository;
+use App\Repositories\TeacherRepository;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -13,7 +18,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(ITeacherService::class, TeacherService::class);
+        $this->app->bind(ITeacherRepository::class, TeacherRepository::class);
     }
 
     /**
