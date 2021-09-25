@@ -1,0 +1,58 @@
+version: '2'
+
+services:
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    links:
+      - mysql:db
+    depends_on:
+      - mysql
+    ports:
+      - 9292:80
+    environment:
+      - "PMA_PORT=33063"
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    restart: always
+    volumes:
+      - dbdata:/var/lib/mysql
+    environment:
+      - "MYSQL_USER=root"
+      - "MYSQL_PASSWORD=root"
+      - "MYSQL_ROOT_PASSWORD=root"
+    ports:
+      - "33063:3306"
+
+  student-svc:
+    tty: true
+    container_name: student-svc
+    build:
+      dockerfile: Dockerfile
+      context: student-svc
+    working_dir: /app
+    env_file:
+      - ./student-svc/.env
+    depends_on:
+      - mysql
+    ports:
+      - "8000:80"
+
+  teacher-svc:
+    tty: true
+    container_name: teacher-svc
+    build:
+      dockerfile: Dockerfile
+      context: teacher-svc
+    working_dir: /app
+    env_file:
+      - ./teacher-svc/.env
+    depends_on:
+      - mysql
+    ports:
+      - "5000:80"
+
+volumes:
+  dbdata:
