@@ -34,7 +34,7 @@ class TeacherServiceTest extends TestCase
         $result = $teacherSvc->authenticate($teacherData);
     }
 
-    private function createTeacherService(Teacher $teacher = null)
+    private function createTeacherService(Teacher $teacher = null) : TeacherService
     {
         $teacherRepo = $this->mockTeacherRepository($teacher);
         return new TeacherService($teacherRepo);

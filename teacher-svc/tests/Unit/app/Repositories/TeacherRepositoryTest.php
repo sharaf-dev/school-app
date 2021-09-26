@@ -8,7 +8,7 @@ use App\Repositories\TeacherRepository;
 
 class TeacherRepositoryTest extends TestCase
 {
-    public function test_GetTeacher_returns_user()
+    public function test_GetTeacher_returns_Teacher()
     {
         $expected = Teacher::factory()->make();
         $teacherRepo = $this->createTeacherRepository($expected);
@@ -43,7 +43,7 @@ class TeacherRepositoryTest extends TestCase
         $this->assertFalse($result);
     }
 
-    private function createTeacherRepository(Teacher $expected = null)
+    private function createTeacherRepository(Teacher $expected = null) : TeacherRepository
     {
         $teacher = $this->mockTeacher($expected);
         return new TeacherRepository($teacher);
