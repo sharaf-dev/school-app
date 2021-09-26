@@ -13,7 +13,7 @@ class TeacherRepository implements ITeacherRepository
      * Get teacher
      * @param array $options
      *
-     * @return Teacher $teacher
+     * @return Teacher
      */
     public function getTeacher(array $options) : ?Teacher
     {

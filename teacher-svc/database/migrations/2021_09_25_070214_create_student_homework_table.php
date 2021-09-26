@@ -17,7 +17,7 @@ class CreateStudentHomeworkTable extends Migration
     {
         Schema::create('student_homework', function (Blueprint $table) {
             $table->id();
-            $table->text('link');
+            $table->text('link')->nullable();
             $table->timestamp('submitted_at')->nullable();
             $table->foreignId('homework_id')->references('id')->on('homeworks');
             $table->foreignId('student_id');

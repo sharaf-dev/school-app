@@ -12,8 +12,8 @@ class TeacherData
     public string $email;
     public string $password;
     public int $status;
-    public int $createdAt;
-    public static $updatedAt;
+    public string $createdAt;
+    public string $updatedAt;
 
     public static function fromRequest(Request $request) : self
     {

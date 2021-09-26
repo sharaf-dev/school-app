@@ -11,4 +11,9 @@ class StudentHomework extends Model
 
     const STATUS_NEW = 0;
     CONST STATUS_SUBMITTED = 1;
+
+    protected $fillable = [
+        'homework_id',
+        'student_id',
+    ];
 }
