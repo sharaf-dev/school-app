@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Homework;
 use App\Models\StudentHomework;
+use Illuminate\Support\Facades\Http;
 
 class CreateHomeworkTest extends TestCase
 {
@@ -46,6 +47,18 @@ class CreateHomeworkTest extends TestCase
 
     public function test_valid_create_homework_with_assignees_response()
     {
+        $data = [
+            'data' =>  [
+                'students' => [
+                    ['id' => 2],
+                ]
+            ]
+        ];
+
+        Http::fake([
+            'student-svc/api/students/get?*' => Http::response($data, 200, [])
+        ]);
+
         $homework = Homework::factory()->make();
         $studentId = 2;
         $inputs = [
@@ -74,7 +87,6 @@ class CreateHomeworkTest extends TestCase
                 'students' => [$studentId],
             ]
         ];
-
 
         $this->setAuthorizationHeader();
         $response = $this->withHeaders($this->headers)
