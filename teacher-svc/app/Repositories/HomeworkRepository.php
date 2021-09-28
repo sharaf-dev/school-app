@@ -47,4 +47,15 @@ class HomeworkRepository implements IHomeworkRepository
 
         return $this->studentHomework->insert($homeworks);
     }
+
+    /**
+     * Get homework
+     * @param int homeworkId
+     *
+     * @return Homework|null
+     */
+    public function getHomework(int $homeworkId) : ?Homework
+    {
+        return $this->homework->find($homeworkId);
+    }
 }

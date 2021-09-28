@@ -25,5 +25,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('homework')->name('homework.')->group(function () {
         Route::post('/create', [HomeworkController::class, 'createHomework'])->name('create');
+        Route::post('/assign', [HomeworkController::class, 'assignHomework'])->name('assign');
     });
 });

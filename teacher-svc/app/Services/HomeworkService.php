@@ -5,6 +5,7 @@ namespace App\Services;
 use App\DTOs\HomeworkData;
 use App\Models\Homework;
 use App\Repositories\IHomeworkRepository;
+use App\Exceptions\HomeworkNotFoundException;
 
 class HomeworkService implements IHomeworkService
 {
@@ -35,5 +36,19 @@ class HomeworkService implements IHomeworkService
             throw new \InvalidArgumentException("Invalid Assignee");
         }
         return $this->repo->assignHomework($homeworkData); 
+    }
+
+    /**
+     * Get homework
+     * @param int homeworkId
+     *
+     * @return Homework
+     */
+    public function getHomework(int $homeworkId) : Homework
+    {
+        $homework = $this->repo->getHomework($homeworkId);
+        throw_unless($homework, HomeworkNotFoundException::class);
+
+        return $homework;
     }
 }

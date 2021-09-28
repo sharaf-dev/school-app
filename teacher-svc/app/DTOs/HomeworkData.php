@@ -18,9 +18,10 @@ class HomeworkData
     public static function fromRequest(Request $request) : self
     {
         $homeworkData = new self();
+        $homeworkData->id= $request->get('homework_id');
         $homeworkData->title = $request->get('title');
         $homeworkData->description = $request->get('description');
-        $homeworkData->assignees = $request->get('assignees');
+        $homeworkData->assignees = $request->get('assignees', []);
         $homeworkData->teacherId = $request->user()->id;
 
         return $homeworkData;
