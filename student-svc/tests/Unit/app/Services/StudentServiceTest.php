@@ -8,6 +8,7 @@ use App\Repositories\StudentRepository;
 use App\Services\StudentService;
 use App\DTOs\StudentData;
 use App\Exceptions\StudentNotFoundException;
+use Illuminate\Support\Collection;
 
 class StudentServiceTest extends TestCase
 {
@@ -34,17 +35,27 @@ class StudentServiceTest extends TestCase
         $result = $studentSvc->authenticate($studentData);
     }
 
-    private function createStudentService(Student $student = null)
+    public function test_getStudents_returns_collection()
     {
-        $studentRepo = $this->mockStudentRepository($student);
+        $expected = new Collection();
+        $studentSvc = $this->createStudentService(null, $expected);
+
+        $result = $studentSvc->getStudents([]);
+        $this->assertEquals($expected, $result);
+    }
+
+    private function createStudentService(Student $student = null, Collection $students = null)
+    {
+        $studentRepo = $this->mockStudentRepository($student, $students);
         return new StudentService($studentRepo);
     }
 
-    private function mockStudentRepository(Student $student = null) : StudentRepository
+    private function mockStudentRepository(Student $student = null, Collection $students = null) : StudentRepository
     {
-        return $this->mock(StudentRepository::class, function ($mock) use ($student) {
+        return $this->mock(StudentRepository::class, function ($mock) use ($student, $students) {
             $mock->shouldReceive('getStudent')->andReturn($student);
             $mock->shouldReceive('checkPassword')->andReturn($student!= null);
+            $mock->shouldReceive('getStudents')->andReturn($students);
         });
     }
 }

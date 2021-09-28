@@ -5,6 +5,7 @@ namespace Tests\Unit\app\Repositories;
 use Tests\TestCase;
 use App\Models\Student;
 use App\Repositories\StudentRepository;
+use Illuminate\Support\Collection;
 
 class StudentRepositoryTest extends TestCase
 {
@@ -43,6 +44,14 @@ class StudentRepositoryTest extends TestCase
         $this->assertFalse($result);
     }
 
+    public function test_getStudents_returns_collection()
+    {
+        $expected = new Collection();
+        $studentRepo = $this->createStudentRepository();
+        $result = $studentRepo->getStudents([]);
+        $this->assertEquals($expected, $result);
+    }
+
     private function createStudentRepository(Student $expected = null)
     {
         $student = $this->mockStudent($expected);
@@ -53,6 +62,7 @@ class StudentRepositoryTest extends TestCase
     {
         return $this->mock(Student::class, function ($mock) use ($student) {
             $mock->shouldReceive('firstWhere')->andReturn($student);
+            $mock->shouldReceive('whereIn->get')->andReturn(new Collection());
         });
     }
 }
