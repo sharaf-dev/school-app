@@ -6,6 +6,7 @@ use App\DTOs\StudentData;
 use App\Models\Student;
 use App\Exceptions\StudentNotFoundException;
 use App\Repositories\IStudentRepository;
+use Illuminate\Support\Collection;
 
 class StudentService implements IStudentService
 {
@@ -36,5 +37,16 @@ class StudentService implements IStudentService
     public function createToken(Student $student) : string
     {
         return $student->createToken($student->student_id)->plainTextToken;
+    }
+
+    /**
+     * Get students
+     * @param array $studentIds
+     *
+     * @return Illuminate\Support\Collection
+     */
+    public function getStudents(array $studentIds) : Collection
+    {
+        return $this->repo->getStudents($studentIds);
     }
 }

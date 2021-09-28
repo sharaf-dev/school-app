@@ -17,6 +17,7 @@ use App\Http\Controllers\StudentController;
 */
 
 Route::post('/login', [StudentController::class, 'login'])->name('login');
+Route::middleware('auth.service')->get('/students/get', [StudentController::class, 'getStudents']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
