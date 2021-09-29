@@ -6,8 +6,14 @@ use Illuminate\Support\ServiceProvider;
 
 use App\Services\IStudentService;
 use App\Services\StudentService;
+use App\Services\IHomeworkService;
+use App\Services\HomeworkService;
 use App\Repositories\IStudentRepository;
 use App\Repositories\StudentRepository;
+use App\Repositories\IHomeworkRepository;
+use App\Repositories\HomeworkRepository;
+use App\Adapters\IHttpClient;
+use App\Adapters\HttpClient;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,7 +25,10 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(IStudentService::class, StudentService::class);
+        $this->app->bind(IHomeworkService::class, HomeworkService::class);
         $this->app->bind(IStudentRepository::class, StudentRepository::class);
+        $this->app->bind(IHomeworkRepository::class, HomeworkRepository::class);
+        $this->app->bind(IHttpClient::class, HttpClient::class);
     }
 
     /**

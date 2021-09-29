@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests\StudentLoginRequest;
 use App\Http\Requests\GetStudentsRequest;
 use App\DTOs\StudentData;
@@ -40,6 +39,6 @@ class StudentController extends Controller
         $students = $this->service->getStudents($studentIds);
 
         Log::info(__method__, ['status' => 'SUCCESS']);
-        return response()->ok('STUDENTS_RETRIEVED', 'Students retrieved successful', compact('students'));
+        return response()->ok('STUDENTS_RETRIEVED', 'Students retrieved successfully', compact('students'));
     }
 }
