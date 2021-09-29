@@ -44,7 +44,7 @@ class StudentServiceTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    private function createStudentService(Student $student = null, Collection $students = null)
+    private function createStudentService(Student $student = null, Collection $students = null) : StudentService
     {
         $studentRepo = $this->mockStudentRepository($student, $students);
         return new StudentService($studentRepo);
