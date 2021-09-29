@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateHomeworkRequest;
 use App\Http\Requests\AssignHomeworkRequest;
+use App\Http\Requests\GetHomeworksRequest;
 use App\Services\IHomeworkService;
 use App\Services\IStudentService;
 use App\DTOs\HomeworkData;
@@ -75,5 +76,14 @@ class HomeworkController extends Controller
             Log::info(__method__, ['status' => 'FAILED']);
             return response()->notFound('STUDENTS_NOT_FOUND', 'Students not found', ['students' => $ex->studentIds]);
         }
+    }
+
+    public function getHomeworks(GetHomeworksRequest $request)
+    {
+        $studentId = $request->get('student_id');
+        $homeworks = $this->service->getHomeworks($studentId);
+
+        Log::info(__method__, ['status' => 'SUCCESS']);
+        return response()->ok('HOMEWORKS_RETRIEVED', 'Homeworks retrieved successfully', compact('homeworks'));
     }
 }

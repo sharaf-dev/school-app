@@ -9,6 +9,8 @@ class StudentHomework extends Model
 {
     use HasFactory;
 
+    protected $table = 'student_homework';
+
     const STATUS_NEW = 0;
     CONST STATUS_SUBMITTED = 1;
 
@@ -16,4 +18,9 @@ class StudentHomework extends Model
         'homework_id',
         'student_id',
     ];
+
+    public function homework()
+    {
+        return $this->belongsTo(Homework::class);
+    }
 }

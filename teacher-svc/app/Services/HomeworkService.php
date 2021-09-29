@@ -51,4 +51,21 @@ class HomeworkService implements IHomeworkService
 
         return $homework;
     }
+
+    /**
+     * Get homeworks
+     * @param int studentId
+     *
+     * @return array
+     */
+    public function getHomeworks(int $studentId) : array
+    {
+        $homeworks = [];
+        $studentHomeworks = $this->repo->getHomeworks($studentId);
+        foreach ($studentHomeworks as $studentHomework)
+        {
+            $homeworks[] = $studentHomework->homework;
+        }
+        return $homeworks;
+    }
 }

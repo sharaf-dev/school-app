@@ -12,5 +12,7 @@ interface IHomeworkService
     public function assignHomework(HomeworkData $homeworkData) : bool;
 
     public function getHomework(int $homeworkId) : Homework;
+
+    public function getHomeworks(int $homeworkId) : array;
 }
 

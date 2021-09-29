@@ -3,17 +3,17 @@
 namespace App\Repositories;
 
 use Illuminate\Http\Client\Response;
-use App\Adapters\HttpClient;
+use App\Adapters\IHttpClient;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 
 class StudentRepository implements IStudentRepository
 {
-    private string $student_svc_host;
+    private string $studentSvcHost;
 
-    public function __construct(public HttpClient $httpClient)
+    public function __construct(public IHttpClient $httpClient)
     {
-        $this->student_svc_host = env('STUDENT_SVC_HOST'); 
+        $this->studentSvcHost = env('STUDENT_SVC_HOST');
     }
 
     /**
@@ -24,7 +24,7 @@ class StudentRepository implements IStudentRepository
      */
     public function getStudents(array $studentIds) : array
     {
-        $url = "$this->student_svc_host/api/students/get";
+        $url = "{$this->studentSvcHost}/api/students/get";
         $data = [
             "student_ids" => $studentIds
         ];

@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Homework;
 use App\Models\StudentHomework;
 use App\DTOs\HomeworkData;
+use Illuminate\Support\Collection;
 
 class HomeworkRepository implements IHomeworkRepository
 {
@@ -57,5 +58,18 @@ class HomeworkRepository implements IHomeworkRepository
     public function getHomework(int $homeworkId) : ?Homework
     {
         return $this->homework->find($homeworkId);
+    }
+
+    /**
+     * Get homeworks
+     * @param int studentId
+     *
+     * @return Illuminate\Support\Collection
+     */
+    public function getHomeworks(int $studentId) : Collection
+    {
+        return $this->studentHomework->where('student_id', $studentId)
+                                     ->where('status', StudentHomework::STATUS_NEW)
+                                     ->get();
     }
 }
