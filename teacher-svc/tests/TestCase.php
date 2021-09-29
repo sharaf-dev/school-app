@@ -4,6 +4,7 @@ namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use App\Models\Teacher;
+use App\Helpers\TokenHelper;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -31,6 +32,13 @@ abstract class TestCase extends BaseTestCase
         $this->headers = [
             'Authorization' => "Bearer {$token}"
         ];
+    }
+
+    public function setServiceToken($issuer)
+    {
+        $helper = new TokenHelper(360, $issuer);
+        $token = $helper->generateServiceToken();
+        $this->headers['Authorization'] = "Bearer {$token}";
     }
 
     public function getToken(object $response) : string

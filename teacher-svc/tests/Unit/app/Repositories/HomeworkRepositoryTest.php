@@ -7,6 +7,7 @@ use App\Models\Homework;
 use App\Models\StudentHomework;
 use App\DTOs\HomeworkData;
 use App\Repositories\HomeworkRepository;
+use Illuminate\Support\Collection;
 
 class HomeworkRepositoryTest extends TestCase
 {
@@ -32,6 +33,26 @@ class HomeworkRepositoryTest extends TestCase
         $this->assertTrue($result);
     }
 
+    public function test_getHomework_returns_Homework()
+    {
+        $expected = Homework::Factory()->make();
+        $homeworkId = 1;
+        $homeworkRepo = $this->createHomeworkRepository($expected);
+
+        $result = $homeworkRepo->getHomework($homeworkId);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_getHomeworks_returns_Homeworks()
+    {
+        $expected = new Collection();
+        $studentId = 1;
+        $homeworkRepo = $this->createHomeworkRepository();
+
+        $result = $homeworkRepo->getHomeworks($studentId);
+        $this->assertEquals($expected, $result);
+    }
+
     private function createHomeworkRepository(
         Homework $homework = null,
         StudentHomework $studentHomework = null
@@ -46,6 +67,7 @@ class HomeworkRepositoryTest extends TestCase
     {
         return $this->mock(Homework::class, function ($mock) use ($homework) {
             $mock->shouldReceive('create')->andReturn($homework);
+            $mock->shouldReceive('find')->andReturn($homework);
         });
     }
 
@@ -53,6 +75,7 @@ class HomeworkRepositoryTest extends TestCase
     {
         return $this->mock(StudentHomework::class, function ($mock) use ($studentHomework) {
             $mock->shouldReceive('insert')->andReturn($studentHomework != null);
+            $mock->shouldReceive('where->where->get')->andReturn(new Collection());
         });
     }
 }

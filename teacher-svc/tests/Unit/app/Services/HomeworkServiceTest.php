@@ -8,6 +8,7 @@ use App\Models\StudentHomework;
 use App\Repositories\HomeworkRepository;
 use App\Services\HomeworkService;
 use App\DTOs\HomeworkData;
+use Illuminate\Support\Collection;
 
 class HomeworkServiceTest extends TestCase
 {
@@ -42,6 +43,26 @@ class HomeworkServiceTest extends TestCase
         $result = $homeworkSvc->assignHomework($homeworkData);
     }
 
+    public function test_getHomework_returns_homework()
+    {
+        $expected = Homework::Factory()->make(); 
+        $homeworkId = 1;
+        $homeworkSvc = $this->createHomeworkService($expected);
+
+        $result = $homeworkSvc->getHomework($homeworkId);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_getHomeworks_returns_homeworks()
+    {
+        $expected = []; 
+        $studentId = 1;
+        $homeworkSvc = $this->createHomeworkService();
+
+        $result = $homeworkSvc->getHomeworks($studentId);
+        $this->assertEquals($expected, $result);
+    }
+
     private function createHomeworkService(
         Homework $homework = null,
         StudentHomework $studentHomework = null
@@ -61,6 +82,8 @@ class HomeworkServiceTest extends TestCase
             function ($mock) use ($homework, $studentHomework) {
                 $mock->shouldReceive('createHomework')->andReturn($homework);
                 $mock->shouldReceive('assignHomework')->andReturn($studentHomework != null);
+                $mock->shouldReceive('getHomework')->andReturn($homework);
+                $mock->shouldReceive('getHomeworks')->andReturn(new Collection());
             }
         );
     }

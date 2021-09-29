@@ -27,13 +27,13 @@ class StudentServiceTest extends TestCase
         $studentSvc->validateStudent(1);
     }
 
-    private function createStudentService($students = []) : StudentService
+    private function createStudentService(array $students = []) : StudentService
     {
         $studentRepo = $this->mockStudentRepository($students);
         return new StudentService($studentRepo);
     }
 
-    private function mockStudentRepository($students = [])
+    private function mockStudentRepository(array $students = []) : StudentRepository
     {
         return $this->mock(StudentRepository::class, function ($mock) use ($students) {
                 $mock->shouldReceive('getStudents')->andReturn($students);
