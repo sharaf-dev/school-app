@@ -7,6 +7,7 @@ use App\Adapters\HttpClient;
 use App\Repositories\HomeworkRepository;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Arr;
+use App\DTOs\HomeworkData;
 
 class HomeworkRepositoryTest extends TestCase
 {
@@ -40,6 +41,46 @@ class HomeworkRepositoryTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function test_submitHomework_returns_success_array()
+    {
+        $expected = [
+            'status' => true,
+            'data' => "dummy data",
+        ];
+        $response = $this->mock(Response::class, function ($mock) use ($expected) {
+            $mock->shouldReceive('successful')->andReturn(true);
+            $mock->shouldReceive('json')->andReturn($expected['data']);
+        });
+        $homeworkRepo = $this->createHomeworkRepository($response);
+        $homeworkData = new HomeworkData();
+        $homeworkData->studentId = 1;
+        $homeworkData->homeworkId = 1;
+        $homeworkData->link = "";
+
+        $result = $homeworkRepo->submitHomework($homeworkData);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_submitHomework_returns_failure_array()
+    {
+        $expected = [
+            'status' => false,
+            'data' => []
+        ];
+        $response = $this->mock(Response::class, function ($mock) {
+            $mock->shouldReceive('successful')->andReturn(false);
+            $mock->shouldReceive('json')->andReturn([]);
+        });
+        $homeworkRepo = $this->createHomeworkRepository($response);
+        $homeworkData = new HomeworkData();
+        $homeworkData->studentId = 1;
+        $homeworkData->homeworkId = 1;
+        $homeworkData->link = "";
+
+        $result = $homeworkRepo->submitHomework($homeworkData);
+        $this->assertEquals($expected, $result);
+    }
+
     private function createHomeworkRepository($response = null) : HomeworkRepository
     {
         $mockHttpClient = $this->mockHttpClient($response);
@@ -50,6 +91,7 @@ class HomeworkRepositoryTest extends TestCase
     {
         return $this->mock(HttpClient::class, function ($mock) use ($response) {
             $mock->shouldReceive('get')->andReturn($response);
+            $mock->shouldReceive('post')->andReturn($response);
         });
     }
 }
