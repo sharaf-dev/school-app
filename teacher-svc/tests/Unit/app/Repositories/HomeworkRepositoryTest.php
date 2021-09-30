@@ -6,6 +6,7 @@ use Tests\TestCase;
 use App\Models\Homework;
 use App\Models\StudentHomework;
 use App\DTOs\HomeworkData;
+use App\DTOs\StudentHomeworkData;
 use App\Repositories\HomeworkRepository;
 use Illuminate\Support\Collection;
 
@@ -43,6 +44,17 @@ class HomeworkRepositoryTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function test_getStudentHomework_returns_StudentHomework()
+    {
+        $expected = StudentHomework::Factory()->make();
+        $studentId = 1;
+        $homeworkId = 1;
+        $homeworkRepo = $this->createHomeworkRepository(null, $expected);
+
+        $result = $homeworkRepo->getStudentHomework($studentId, $homeworkId);
+        $this->assertEquals($expected, $result);
+    }
+
     public function test_getHomeworks_returns_Homeworks()
     {
         $expected = new Collection();
@@ -51,6 +63,19 @@ class HomeworkRepositoryTest extends TestCase
 
         $result = $homeworkRepo->getHomeworks($studentId);
         $this->assertEquals($expected, $result);
+    }
+
+    public function test_submitHomework_returns_true()
+    {
+        $studentHomework = StudentHomework::Factory()->make();
+        $homeworkRepo = $this->createHomeworkRepository(null, $studentHomework);
+        $homeworkData = new StudentHomeworkData();
+        $homeworkData->link = "";
+        $homeworkData->studentId = 1;
+        $homeworkData->homeworkId = 1;
+
+        $result = $homeworkRepo->submitHomework($homeworkData);
+        $this->assertTrue($result);
     }
 
     private function createHomeworkRepository(
@@ -76,6 +101,8 @@ class HomeworkRepositoryTest extends TestCase
         return $this->mock(StudentHomework::class, function ($mock) use ($studentHomework) {
             $mock->shouldReceive('insert')->andReturn($studentHomework != null);
             $mock->shouldReceive('where->where->get')->andReturn(new Collection());
+            $mock->shouldReceive('where->first')->andReturn($studentHomework);
+            $mock->shouldReceive('where->where->update')->andReturn($studentHomework != null);
         });
     }
 }
