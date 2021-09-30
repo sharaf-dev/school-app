@@ -6,7 +6,6 @@ use Closure;
 use Illuminate\Http\Request;
 use Firebase\JWT\JWT;
 use App\Helpers\TokenHelper;
-use App\Exceptions\InvalidTokenException;
 
 class VerifyServiceToken
 {
@@ -25,7 +24,7 @@ class VerifyServiceToken
             $token = $request->bearerToken();
             $this->helper->validateServiceToken($token);
             return $next($request);
-        } catch (InvalidTokenException $e) {
+        } catch (\Exception $e) {
             return response()->unauthorized('INVALID_TOKEN', $e->getMessage());
         }
     }

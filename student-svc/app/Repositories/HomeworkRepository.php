@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Adapters\IHttpClient;
 use Illuminate\Support\Arr;
+use App\DTOs\HomeworkData;
 
 class HomeworkRepository implements IHomeworkRepository
 {
@@ -33,5 +34,23 @@ class HomeworkRepository implements IHomeworkRepository
 
         $body = $response->json();
         return Arr::get($body, 'data.homeworks');
+    }
+
+    /**
+     * Submit homework
+     * @param HomeworkData $homeworkData
+     *
+     * @return bool
+     */
+    public function submitHomework(HomeworkData $homeworkData) : array
+    {
+        $url = "{$this->teacherSvcHost}/api/homework/submit";
+        $data = $homeworkData->toRequestPayload();
+        $response = $this->httpClient->post($url, $data);
+
+        return [
+            'status' => $response->successful(),
+            'data' => $response->json()
+        ];
     }
 }

@@ -17,6 +17,7 @@ class StudentService implements IStudentService
      * @param StudentData $studentData
      *
      * @return Student
+     * @throws StudentNotFoundException
      */
     public function authenticate(StudentData $studentData) : Student
     {
