@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Http;
 use App\Models\Homework;
+use App\Models\StudentHomework;
 
 class AssignHomeworkTest extends TestCase
 {
@@ -109,6 +110,9 @@ class AssignHomeworkTest extends TestCase
         $expectedResponse = [
             'status' => 'STUDENTS_NOT_FOUND',
             'message' => true,
+            'errors' => [
+                'students' => true
+            ]
         ];
 
         Homework::factory()->make()->save();
@@ -117,6 +121,43 @@ class AssignHomeworkTest extends TestCase
                         ->json('POST', $this->uri, $inputs);
 
         $response->assertStatus(404);
+        $response->assertJson($expectedResponse);
+    }
+
+    public function test_assign_homework_return_assignment_failed()
+    {
+        Homework::factory()->make()->save();
+        StudentHomework::factory()->make()->save();
+        $data = [
+            'data' =>  [
+                'students' => [
+                    ['id' => 1],
+                ]
+            ]
+        ];
+
+        Http::fake([
+            'student-svc/api/students/get?*' => Http::response($data, 200, [])
+        ]);
+
+        $inputs = [
+            'homework_id' => 1,
+            'assignees' => [1],
+        ];
+
+        $expectedResponse = [
+            'status' => 'ASSIGNMENT_FAILED',
+            'message' => true,
+            'errors' => [
+                'student_ids' => true
+            ]
+        ];
+
+        $this->setAuthorizationHeader();
+        $response = $this->withHeaders($this->headers)
+                        ->json('POST', $this->uri, $inputs);
+
+        $response->assertStatus(400);
         $response->assertJson($expectedResponse);
     }
 }

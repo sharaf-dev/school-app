@@ -97,4 +97,40 @@ class CreateHomeworkTest extends TestCase
         $this->assertDatabaseHas('homeworks', $expectedHomeworkRecord);
         $this->assertDatabaseHas('student_homework', $expectedStudentHomeworkRecord);
     }
+
+    public function test_create_homework_return_student_not_found()
+    {
+        $data = [
+            'data' =>  [
+                'students' => []
+            ]
+        ];
+
+        Http::fake([
+            'student-svc/api/students/get?*' => Http::response($data, 200, [])
+        ]);
+
+        $homework = Homework::factory()->make();
+        $studentId = 10;
+        $inputs = [
+            'title' => $homework->title,
+            'description' => $homework->description,
+            'assignees' => [$studentId],
+        ];
+
+        $expectedResponse = [
+            'status' => 'STUDENTS_NOT_FOUND',
+            'message' => true,
+            'errors' => [
+                'students' => true,
+            ]
+        ];
+
+        $this->setAuthorizationHeader();
+        $response = $this->withHeaders($this->headers)
+                        ->json('POST', $this->uri, $inputs);
+
+        $response->assertStatus(404);
+        $response->assertJson($expectedResponse);
+    }
 }
