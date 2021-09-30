@@ -23,4 +23,9 @@ class StudentHomework extends Model
     {
         return $this->belongsTo(Homework::class);
     }
+
+    public function isSubmitted() : bool
+    {
+        return $this->status == self::STATUS_SUBMITTED;
+    }
 }

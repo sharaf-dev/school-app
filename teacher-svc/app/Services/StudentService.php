@@ -46,9 +46,11 @@ class StudentService implements IStudentService
 
         $invalidStudents = array_merge(array_diff($studentIds, $dbIds));
 
-        if (!empty($invalidStudents))
-        {
-            throw new StudentNotFoundException($invalidStudents); 
-        }
+        throw_unless(
+            empty($invalidStudents),
+            StudentNotFoundException::class,
+            'Students not found',
+            [ 'students' => $invalidStudents ]
+        );
     }
 }

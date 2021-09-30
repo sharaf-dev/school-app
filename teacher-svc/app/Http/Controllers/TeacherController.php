@@ -15,7 +15,8 @@ class TeacherController extends Controller
 
     public function login(TeacherLoginRequest $request)
     {
-        try {
+        try
+        {
             $teacherData = TeacherData::fromRequest($request);
             $teacher = $this->service->authenticate($teacherData);
 
@@ -25,8 +26,9 @@ class TeacherController extends Controller
 
             Log::info(__method__, ['status' => 'SUCCESS', 'teacher_id' => $teacher->teacher_id]);
             return response()->ok('LOGIN_SUCCESS', 'Teacher login successful', $data);
-
-        } catch (TeacherNotFoundException $ex) {
+        }
+        catch (TeacherNotFoundException $ex)
+        {
             Log::info(__method__, ['status' => 'FAILED', 'ip_address' => $request->ip()]);
             return response()->unauthorized('LOGIN_FAILED', 'Email or password incorrect.');
         }

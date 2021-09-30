@@ -3,9 +3,12 @@
 namespace App\Services;
 
 use App\DTOs\HomeworkData;
+use App\DTOs\StudentHomeworkData;
 use App\Models\Homework;
+use App\Models\StudentHomework;
 use App\Repositories\IHomeworkRepository;
 use App\Exceptions\HomeworkNotFoundException;
+use App\Exceptions\ArgumentException;
 
 class HomeworkService implements IHomeworkService
 {
@@ -14,7 +17,6 @@ class HomeworkService implements IHomeworkService
     /**
      * Create homework
      * @param Homework $homework
-     * @param int $teachId
      *
      * @return Homework
      */
@@ -28,13 +30,31 @@ class HomeworkService implements IHomeworkService
      * @param HomeworkData $homeworkData
      *
      * @return bool
+     * @throws ArgumentException
      */
     public function assignHomework(HomeworkData $homeworkData) : bool
     {
-        if (empty($homeworkData->assignees))
+        throw_if(empty($homeworkData->assignees), ArgumentException::class, 'Invalid Assignee');
+
+        $assignedStudents = [];
+        foreach ($homeworkData->assignees as $assignee)
         {
-            throw new \InvalidArgumentException("Invalid Assignee");
+            $homework = $this->repo->getStudentHomework($assignee, $homeworkData->id);
+            if ($homework)
+            {
+                $assignedStudents[] = $assignee;
+            }
         }
+
+        throw_if(
+            !empty($assignedStudents),
+            ArgumentException::class,
+            'Homework already assigned',
+            [
+                'student_ids' => $assignedStudents
+            ]
+        );
+
         return $this->repo->assignHomework($homeworkData); 
     }
 
@@ -43,6 +63,7 @@ class HomeworkService implements IHomeworkService
      * @param int homeworkId
      *
      * @return Homework
+     * @throws HomeworkNotFoundException
      */
     public function getHomework(int $homeworkId) : Homework
     {
@@ -67,5 +88,22 @@ class HomeworkService implements IHomeworkService
             $homeworks[] = $studentHomework->homework;
         }
         return $homeworks;
+    }
+
+    /**
+     * Submit homeworks
+     * @param StudentHomeworkData $homeworkData
+     *
+     * @return void
+     * @throws ArgumentException
+     */
+    public function submitHomework(StudentHomeworkData $homeworkData) : void
+    {
+        $homework = $this->repo->getStudentHomework($homeworkData->studentId, $homeworkData->homeworkId);
+        throw_if(!$homework, HomeworkNotFoundException::class);
+        throw_if($homework->isSubmitted(), ArgumentException::class ,'Homework already submitted');
+
+        $status = $this->repo->submitHomework($homeworkData);
+        throw_unless($status, ArgumentException::class, 'Homework submission failed');
     }
 }

@@ -23,6 +23,11 @@ class TokenHelper
         $this->jwtSecret = env('JWT_SECRET');
     }
 
+    public static function create(int $tokenValidity = 360, string $issuer = "teacher-svc") : self
+    {
+        return new self($tokenValidity, $issuer);
+    }
+
     public function generateServiceToken() : string
     {
         $payload = [

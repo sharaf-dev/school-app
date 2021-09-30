@@ -4,11 +4,11 @@ namespace App\Exceptions;
 
 use Exception;
 
-class StudentNotFoundException extends NotFoundException
+class ArgumentException extends Exception
 {
-    private array $data = [];
+    private $data = [];
 
-    public function __construct(string $message = '', $data = [])
+    public function __construct($message = '', $data = [])
     {
         parent::__construct($message);
         $this->data = $data;
