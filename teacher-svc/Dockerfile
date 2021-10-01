@@ -12,6 +12,8 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libzip-dev \
     libonig-dev \
+    zip \
+    unzip \
     vim
 
 # Clear cache
