@@ -14,6 +14,10 @@ class TeacherSeeder extends Seeder
      */
     public function run()
     {
-        Teacher::factory(1)->create();
+        $teacher = Teacher::find(1);
+        if (!$teacher)
+        {
+            Teacher::factory(1)->create();
+        }
     }
 }
