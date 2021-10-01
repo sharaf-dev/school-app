@@ -3,7 +3,7 @@ version: '2'
 services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin
+    container_name: school-app_phpmyadmin
     links:
       - mysql:db
     depends_on:
@@ -15,7 +15,7 @@ services:
 
   mysql:
     image: mysql:5.7
-    container_name: mysql
+    container_name: school-app_mysql
     restart: always
     volumes:
       - dbdata:/var/lib/mysql
@@ -32,9 +32,10 @@ services:
     build:
       dockerfile: Dockerfile
       context: student-svc
+    command: bash ./entrypoint.sh
     working_dir: /app
     env_file:
-      - ./student-svc/.env
+      - ./student-svc/.env.example
     depends_on:
       - mysql
     ports:
@@ -46,9 +47,10 @@ services:
     build:
       dockerfile: Dockerfile
       context: teacher-svc
+    command: bash ./entrypoint.sh
     working_dir: /app
     env_file:
-      - ./teacher-svc/.env
+      - ./teacher-svc/.env.example
     depends_on:
       - mysql
     ports:
