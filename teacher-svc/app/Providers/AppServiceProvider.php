@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(IHomeworkRepository::class, HomeworkRepository::class);
         $this->app->bind(ITeacherRepository::class, TeacherRepository::class);
         $this->app->bind(IStudentRepository::class, StudentRepository::class);
-        $this->app->bind(IHttpClient::class, HttpClient::class);
+        $this->app->singleton(IHttpClient::class, HttpClient::class);
     }
 
     /**
