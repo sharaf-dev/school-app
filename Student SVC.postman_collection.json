@@ -1,0 +1,226 @@
+{
+	"info": {
+		"_postman_id": "111b8dee-3b27-4446-8590-977373cc0e65",
+		"name": "Student SVC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.code == 200)",
+							"{",
+							"    var jsonData = JSON.parse(responseBody);",
+							"    pm.collectionVariables.set(\"student-token\", jsonData.data.token);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"student@test.com\",\n    \"password\": \"password\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{student-svc}}/api/login",
+					"host": [
+						"{{student-svc}}"
+					],
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get students (svc endpoint)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let tokenHost = pm.collectionVariables.get('student-svc');",
+							"pm.sendRequest(tokenHost+\"/api/service-token\", function (err, response) {",
+							"    pm.collectionVariables.set('student-svc-token', response.text());",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{student-svc-token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"student_ids\": [1]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{student-svc}}/api/students/get",
+					"host": [
+						"{{student-svc}}"
+					],
+					"path": [
+						"api",
+						"students",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get homework",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{student-token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{student-svc}}/api/homework/get",
+					"host": [
+						"{{student-svc}}"
+					],
+					"path": [
+						"api",
+						"homework",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit homework",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{student-token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"homework_id\": 1,\n    \"link\": \"dummy\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{student-svc}}/api/homework/submit",
+					"host": [
+						"{{student-svc}}"
+					],
+					"path": [
+						"api",
+						"homework",
+						"submit"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "student-svc",
+			"value": "http://localhost:8000"
+		},
+		{
+			"key": "student-token",
+			"value": ""
+		},
+		{
+			"key": "student-svc-token",
+			"value": ""
+		}
+	]
+}

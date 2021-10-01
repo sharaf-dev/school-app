@@ -1,0 +1,289 @@
+{
+	"info": {
+		"_postman_id": "c3abfaeb-858c-4791-961d-b76a2caf33b1",
+		"name": "Teacher SVC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.collectionVariables.set(\"teacher-token\", jsonData.data.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"teacher@test.com\",\n    \"password\": \"password\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{teacher-svc}}/api/login",
+					"host": [
+						"{{teacher-svc}}"
+					],
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create homework",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{teacher-token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"homework 1\",\n    \"description\": \"homework descpriton 1\",\n    \"assignees\": [1]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{teacher-svc}}/api/homework/create",
+					"host": [
+						"{{teacher-svc}}"
+					],
+					"path": [
+						"api",
+						"homework",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Assign homework",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{teacher-token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"homework_id\": 1,\n    \"assignees\": [1]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{teacher-svc}}/api/homework/assign",
+					"host": [
+						"{{teacher-svc}}"
+					],
+					"path": [
+						"api",
+						"homework",
+						"assign"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get homework (svc endpoint)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let tokenHost = pm.collectionVariables.get('teacher-svc');",
+							"pm.sendRequest(tokenHost+\"/api/service-token\", function (err, response) {",
+							"    pm.collectionVariables.set('teacher-svc-token', response.text());",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{teacher-svc-token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{teacher-svc}}/api/homework/get?student_id=1",
+					"host": [
+						"{{teacher-svc}}"
+					],
+					"path": [
+						"api",
+						"homework",
+						"get"
+					],
+					"query": [
+						{
+							"key": "student_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit homework (svc endpoint)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let tokenHost = pm.collectionVariables.get('teacher-svc');",
+							"pm.sendRequest(tokenHost+\"/api/service-token\", function (err, response) {",
+							"    pm.collectionVariables.set('teacher-svc-token', response.text());",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{teacher-svc-token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"student_id\": 1,\n    \"homework_id\": 1,\n    \"link\": \"http:://www.homework.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{teacher-svc}}/api/homework/submit",
+					"host": [
+						"{{teacher-svc}}"
+					],
+					"path": [
+						"api",
+						"homework",
+						"submit"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "teacher-svc",
+			"value": "http://localhost:5000"
+		},
+		{
+			"key": "teacher-token",
+			"value": ""
+		},
+		{
+			"key": "teacher-svc-token",
+			"value": ""
+		}
+	]
+}
