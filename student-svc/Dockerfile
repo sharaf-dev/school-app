@@ -28,4 +28,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 WORKDIR /app
 COPY . .
 RUN chown -R www-data:www-data app
+RUN chown -R www-data:www-data storage
+RUN chown -R www-data:www-data bootstrap/cache
+RUN chmod -R 775 storage
+RUN chmod -R 775 bootstrap/cache
 RUN composer install
