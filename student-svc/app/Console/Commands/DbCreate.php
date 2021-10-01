@@ -63,7 +63,7 @@ class DbCreate extends Command
             }
             catch (PDOException $e)
             {
-                $this->error(sprintf('Failed to create %s database, %s', $database, $exception->getMessage())); 
+                $this->error(sprintf('Failed to create %s database, %s', $database, $e->getMessage()));
                 return 1;
             }
         }
