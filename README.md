@@ -58,7 +58,7 @@ Sqlite database is being used to run the integration tests. project composer fil
 $ composer install
 
 # Run test using artisan command
-$ composer install
+$ php artisan test
 ```
 
 #### Running tests in docker container
